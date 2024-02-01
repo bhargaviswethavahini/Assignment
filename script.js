@@ -1,29 +1,58 @@
 // script.js
 
-// Function to authenticate user and get JWT token
+const BASE_URL = 'http://localhost:8080/api/customers';
+let authToken = ''; // Store the JWT token
+
 function authenticateUser() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Implement authentication logic using fetch or XMLHttpRequest
-    // Get JWT token and store it securely (e.g., in localStorage)
+    fetch('http://localhost:8080/authenticate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        authToken = data.token;
+        // Store the token securely (e.g., in localStorage)
+    })
+    .catch(error => console.error('Authentication error:', error));
 }
 
-// Function to get the list of customers
 function getCustomerList() {
-    // Implement logic to fetch customer list using fetch or XMLHttpRequest
-    // Update the HTML to display the list
+    fetch(BASE_URL, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${authToken}`,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the HTML to display the list
+    })
+    .catch(error => console.error('Error fetching customer list:', error));
 }
 
-// Function to add a new customer
 function addCustomer() {
-    // Implement logic to add a new customer using fetch or XMLHttpRequest
-    // Display success or error message
+  
 }
 
-// Function to sync customers from remote API
 function syncCustomers() {
-    // Implement logic to call remote API and sync customers
-    // Update the local database with the received data
-    // Display success or error message
+    fetch(`${BASE_URL}/sync`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${authToken}`,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+       
+    })
+    .catch(error => console.error('Error syncing customers:', error));
 }
